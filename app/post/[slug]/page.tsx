@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 
 export default function Page() {
   const { slug } = useParams();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [post, setPost] = useState<any>(null);
 
   useEffect(() => {

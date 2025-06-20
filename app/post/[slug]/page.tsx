@@ -1,17 +1,23 @@
-type Props = {
+"use client";
+
+import { useEffect, useState } from "react";
+
+type PageProps = {
   params: {
     slug: string;
   };
 };
 
-export default async function Page({ params }: Props) {
-  const { slug } = params;
+export default function Page({ params }: PageProps) {
+  const [post, setPost] = useState<any>(null);
 
-  const res = await fetch(
-    `http://smesolutions.local/wp-json/wp/v2/posts?slug=${slug}`
-  );
-  const data = await res.json();
-  const post = data[0];
+  useEffect(() => {
+    fetch(`http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`)
+      .then((res) => res.json())
+      .then((data) => setPost(data[0]));
+  }, [params.slug]);
+
+  if (!post) return <p>Loading...</p>;
 
   return (
     <div className="p-6">

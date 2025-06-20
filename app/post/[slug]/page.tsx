@@ -1,39 +1,24 @@
-import axios from "axios";
-import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
-type Post = {
-  id: number;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
+type Props = {
+  params: {
+    slug: string;
   };
 };
 
-export default async function PostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const res = await axios.get(
-    `http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`
+export default async function Page({ params }: Props) {
+  const { slug } = params;
+
+  const res = await fetch(
+    `http://smesolutions.local/wp-json/wp/v2/posts?slug=${slug}`
   );
-  const posts: Post[] = res.data;
-
-  if (posts.length === 0) {
-    notFound();
-  }
-
-  const post = posts[0];
+  const data = await res.json();
+  const post = data[0];
 
   return (
-    <main className="p-8">
-      <h1 className="text-3xl font-bold">{post.title.rendered}</h1>
-      <div
-        className="mt-4 text-gray-700"
-        dangerouslySetInnerHTML={{ __html: post.content.rendered }}
-      />
-    </main>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-4">{post.title.rendered}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+    </div>
   );
 }

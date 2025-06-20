@@ -2,7 +2,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const res = await fetch(
     `http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`,
     {
-      next: { revalidate: 0 }, // 不要快取，否則文章更新不會立即反映
+      next: { revalidate: 0 },
     }
   );
 

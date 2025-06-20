@@ -8,8 +8,18 @@ type PageProps = {
   };
 };
 
+type Post = {
+  id: number;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+};
+
 export default function Page({ params }: PageProps) {
-  const [post, setPost] = useState<any>(null);
+  const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     fetch(`http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`)

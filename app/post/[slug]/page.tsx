@@ -1,21 +1,32 @@
-"use client";
+// ❌ 不要加 'use client'
 
-import { useEffect, useState } from "react";
+type PageProps = {
+  params: {
+    slug: string;
+  };
+};
 
-export default function Page({ params }: { params: { slug: string } }) {
-  const [post, setPost] = useState<null | {
-    id: number;
-    title: { rendered: string };
-    content: { rendered: string };
-  }>(null);
+type Post = {
+  id: number;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+};
 
-  useEffect(() => {
-    fetch(`http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`)
-      .then((res) => res.json())
-      .then((data) => setPost(data[0]));
-  }, [params.slug]);
+export default async function Page({ params }: PageProps) {
+  const res = await fetch(
+    `http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`,
+    {
+      // 👇 避免 cache，確保內容即時更新
+      next: { revalidate: 0 },
+    }
+  );
 
-  if (!post) return <p>Loading...</p>;
+  const data = await res.json();
+  const post: Post = data[0];
 
   return (
     <div className="p-6">

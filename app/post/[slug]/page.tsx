@@ -2,24 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-type PageProps = {
-  params: {
-    slug: string;
-  };
-};
-
-type Post = {
-  id: number;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
-};
-
-export default function Page({ params }: PageProps) {
-  const [post, setPost] = useState<Post | null>(null);
+export default function Page({ params }: { params: { slug: string } }) {
+  const [post, setPost] = useState<null | {
+    id: number;
+    title: { rendered: string };
+    content: { rendered: string };
+  }>(null);
 
   useEffect(() => {
     fetch(`http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`)

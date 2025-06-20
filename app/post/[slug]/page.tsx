@@ -1,18 +1,21 @@
-export const dynamic = "force-dynamic";
+"use client";
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const res = await fetch(
-    `http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`,
-    {
-      next: { revalidate: 0 },
-    }
-  );
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-  const data = await res.json();
-  const post = data[0];
+export default function Page() {
+  const { slug } = useParams();
+  const [post, setPost] = useState<any>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+    fetch(`http://smesolutions.local/wp-json/wp/v2/posts?slug=${slug}`)
+      .then((res) => res.json())
+      .then((data) => setPost(data[0]));
+  }, [slug]);
 
   if (!post) {
-    return <div className="p-6 text-red-600">找不到文章</div>;
+    return <div className="p-6 text-gray-600">載入中或找不到文章</div>;
   }
 
   return (

@@ -16,17 +16,20 @@ type Post = {
   };
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: { params: { slug: string } }) {
   const res = await fetch(
     `http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`,
     {
-      // 👇 避免 cache，確保內容即時更新
-      next: { revalidate: 0 },
+      next: { revalidate: 0 }, // 不要快取，否則文章更新不會立即反映
     }
   );
 
   const data = await res.json();
-  const post: Post = data[0];
+  const post = data[0];
+
+  if (!post) {
+    return <div className="p-6 text-red-600">找不到文章</div>;
+  }
 
   return (
     <div className="p-6">

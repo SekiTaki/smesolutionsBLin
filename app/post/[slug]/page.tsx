@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 export default async function Page({ params }: { params: { slug: string } }) {
   const res = await fetch(
     `http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`,

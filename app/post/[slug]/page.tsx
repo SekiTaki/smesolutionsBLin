@@ -1,21 +1,3 @@
-// ❌ 不要加 'use client'
-
-type PageProps = {
-  params: {
-    slug: string;
-  };
-};
-
-type Post = {
-  id: number;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
-};
-
 export default async function Page({ params }: { params: { slug: string } }) {
   const res = await fetch(
     `http://smesolutions.local/wp-json/wp/v2/posts?slug=${params.slug}`,
